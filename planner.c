@@ -26,10 +26,9 @@
 #include <stdlib.h>
 #include "planner.h"
 #include "nuts_bolts.h"
-#include "stepper.h"
+#include "platform.h"
 #include "settings.h"
 #include "config.h"
-#include "protocol.h"
 
 static block_t block_buffer[BLOCK_BUFFER_SIZE];  // A ring buffer for motion instructions
 static volatile uint8_t block_buffer_head;       // Index of the next block to be pushed
@@ -75,7 +74,7 @@ static float estimate_acceleration_distance(float initial_rate, float target_rat
 
 /*                        + <- some maximum rate we don't care about
                          /|\
-                        / | \                    
+                        / | \
                        /  |  + <- final_rate     
                       /   |  |                   
      initial_rate -> +----+--+                   
@@ -190,8 +189,8 @@ static void planner_forward_pass()
 
 /*                             STEPPER RATE DEFINITION                                              
                                      +--------+   <- nominal_rate
-                                    /          \                                
-    nominal_rate*entry_factor ->   +            \                               
+                                    /          \
+    nominal_rate*entry_factor ->   +            \
                                    |             + <- nominal_rate*exit_factor  
                                    +-------------+                              
                                        time -->                                 
@@ -230,8 +229,8 @@ static void calculate_trapezoid_for_block(block_t *block, float entry_factor, fl
 
 /*                            PLANNER SPEED DEFINITION                                              
                                      +--------+   <- current->nominal_speed
-                                    /          \                                
-         current->entry_speed ->   +            \                               
+                                    /          \
+         current->entry_speed ->   +            \
                                    |             + <- next->entry_speed
                                    +-------------+                              
                                        time -->                                 

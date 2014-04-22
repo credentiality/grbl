@@ -19,14 +19,10 @@
   along with Grbl.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include <avr/io.h>
-#include "protocol.h"
 #include "report.h"
-#include "stepper.h"
+#include "platform.h"
 #include "nuts_bolts.h"
 #include "settings.h"
-#include "eeprom.h"
-#include "limits.h"
 
 settings_t settings;
 

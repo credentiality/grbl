@@ -23,8 +23,6 @@
 #include "config.h"
 #include "planner.h"
 
-#include <avr/io.h>
-
 static uint8_t current_coolant_mode;
 
 void coolant_init()

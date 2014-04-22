@@ -19,16 +19,12 @@
   along with Grbl.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include <avr/io.h>
-#include <avr/interrupt.h>
+#include "platform.h"
 #include "protocol.h"
 #include "gcode.h"
-#include "serial.h"
-#include "print.h"
 #include "settings.h"
 #include "config.h"
 #include "nuts_bolts.h"
-#include "stepper.h"
 #include "report.h"
 #include "motion_control.h"
 

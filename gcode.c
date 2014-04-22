@@ -27,11 +27,8 @@
 #include "nuts_bolts.h"
 #include <math.h>
 #include "settings.h"
-#include "motion_control.h"
-#include "spindle_control.h"
-#include "coolant_control.h"
+#include "platform.h"
 #include "errno.h"
-#include "protocol.h"
 #include "report.h"
 
 // Declare gc extern struct

@@ -23,21 +23,14 @@
    been integral throughout the development of the higher level details of Grbl, as well
    as being a consistent sounding board for the future of accessible and free CNC. */
 
-#include <avr/interrupt.h>
-#include <avr/pgmspace.h>
 #include "config.h"
 #include "planner.h"
 #include "nuts_bolts.h"
-#include "stepper.h"
-#include "spindle_control.h"
-#include "coolant_control.h"
-#include "motion_control.h"
+#include "platform.h"
 #include "gcode.h"
-#include "protocol.h"
 #include "limits.h"
 #include "report.h"
 #include "settings.h"
-#include "serial.h"
 
 // Declare system global variable structure
 system_t sys; 
@@ -48,7 +41,9 @@ int main(void)
   serial_init(); // Setup serial baud rate and interrupts
   settings_init(); // Load grbl settings from EEPROM
   st_init(); // Setup stepper pins and interrupt timers
+#ifdef ARDUINO
   sei(); // Enable interrupts
+#endif
   
   memset(&sys, 0, sizeof(sys));  // Clear all system variables
   sys.abort = true;   // Set abort to complete initialization

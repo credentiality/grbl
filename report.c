@@ -26,13 +26,11 @@
   methods to accomodate their needs.
 */
 
-#include <avr/pgmspace.h>
 #include "report.h"
-#include "print.h"
 #include "settings.h"
 #include "nuts_bolts.h"
 #include "gcode.h"
-#include "coolant_control.h"
+#include "platform.h"
 
 
 // Handles the primary confirmation protocol response for streaming interfaces and human-feedback.

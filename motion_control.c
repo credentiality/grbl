@@ -20,21 +20,15 @@
   along with Grbl.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include <avr/io.h>
-#include <util/delay.h>
 #include <math.h>
 #include <stdlib.h>
 #include "settings.h"
 #include "config.h"
 #include "gcode.h"
 #include "motion_control.h"
-#include "spindle_control.h"
-#include "coolant_control.h"
 #include "nuts_bolts.h"
-#include "stepper.h"
+#include "platform.h"
 #include "planner.h"
-#include "limits.h"
-#include "protocol.h"
 
 // Execute linear motion in absolute millimeter coordinates. Feed rate given in millimeters/second
 // unless invert_feed_rate is true. Then the feed_rate means that the motion should be completed in
@@ -204,7 +198,7 @@ void mc_dwell(float seconds)
      // NOTE: Check and execute runtime commands during dwell every <= DWELL_TIME_STEP milliseconds.
      protocol_execute_runtime();
      if (sys.abort) { return; }
-     _delay_ms(DWELL_TIME_STEP); // Delay DWELL_TIME_STEP increment
+     delay_ms(DWELL_TIME_STEP); // Delay DWELL_TIME_STEP increment
    }
 }
 
@@ -215,7 +209,9 @@ void mc_dwell(float seconds)
 void mc_go_home()
 {
   sys.state = STATE_HOMING; // Set system state variable
+#ifdef ARDUINO
   LIMIT_PCMSK &= ~LIMIT_MASK; // Disable hard limits pin change register for cycle duration
+#endif
   
   limits_go_home(); // Perform homing routine.
 
@@ -254,7 +250,9 @@ void mc_go_home()
   sys_sync_current_position();
 
   // If hard limits feature enabled, re-enable hard limits pin change register after homing cycle.
+#ifdef ARDUINO
   if (bit_istrue(settings.flags,BITFLAG_HARD_LIMIT_ENABLE)) { LIMIT_PCMSK |= LIMIT_MASK; }
+#endif
   // Finished! 
 }
 

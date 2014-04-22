@@ -19,7 +19,6 @@
   along with Grbl.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include <util/delay.h>
 #include "nuts_bolts.h"
 #include "gcode.h"
 #include "planner.h"
@@ -113,7 +112,9 @@ int read_float(char *line, uint8_t *char_counter, float *float_ptr)
 // which only accepts constants in future compiler releases.
 void delay_ms(uint16_t ms) 
 {
+#ifdef ARDUINO
   while ( ms-- ) { _delay_ms(1); }
+#endif
 }
 
 
@@ -122,6 +123,7 @@ void delay_ms(uint16_t ms)
 // efficiently with larger delays, as the counter adds parasitic time in each iteration.
 void delay_us(uint32_t us) 
 {
+#ifdef ARDUINO
   while (us) {
     if (us < 10) { 
       _delay_us(1);
@@ -137,6 +139,7 @@ void delay_us(uint32_t us)
       us -= 1000;
     }
   }
+#endif
 }
 
 // Syncs all internal position vectors to the current system position.
