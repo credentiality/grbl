@@ -30,6 +30,8 @@
 #include "platform.h"
 #include "errno.h"
 #include "report.h"
+#include "motion_control.h"
+#include "planner.h"
 
 // Declare gc extern struct
 parser_state_t gc;

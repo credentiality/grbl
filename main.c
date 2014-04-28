@@ -31,12 +31,16 @@
 #include "limits.h"
 #include "report.h"
 #include "settings.h"
+#include "stepper.h"
+#include "protocol.h"
 
 // Declare system global variable structure
 system_t sys; 
 
 int main(void)
 {
+  eeprom_init("grblrc");
+
   // Initialize system
   serial_init(); // Setup serial baud rate and interrupts
   settings_init(); // Load grbl settings from EEPROM

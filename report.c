@@ -31,6 +31,7 @@
 #include "nuts_bolts.h"
 #include "gcode.h"
 #include "platform.h"
+#include "print.h"
 
 
 // Handles the primary confirmation protocol response for streaming interfaces and human-feedback.

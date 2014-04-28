@@ -19,10 +19,13 @@
   along with Grbl.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+#include <stdio.h>
+
 #include "report.h"
 #include "platform.h"
 #include "nuts_bolts.h"
 #include "settings.h"
+#include "protocol.h"
 
 settings_t settings;
 
@@ -57,12 +60,14 @@ void settings_write_coord_data(uint8_t coord_select, float *coord_data)
 // Method to store Grbl global settings struct and version number into EEPROM
 void write_global_settings() 
 {
+  printf("Writing global settings.\n");
   eeprom_put_char(0, SETTINGS_VERSION);
   memcpy_to_eeprom_with_checksum(EEPROM_ADDR_GLOBAL, (char*)&settings, sizeof(settings_t));
 }
 
 // Method to reset Grbl global settings back to defaults. 
 void settings_reset(bool reset_all) {
+  printf("Settings reset.\n");
   // Reset all settings or only the migration settings to the new version.
   if (reset_all) {
     settings.steps_per_mm[X_AXIS] = DEFAULT_X_STEPS_PER_MM;
@@ -152,7 +157,10 @@ uint8_t settings_store_global_setting(int parameter, float value) {
   switch(parameter) {
     case 0: case 1: case 2:
       if (value <= 0.0) { return(STATUS_SETTING_VALUE_NEG); } 
-      settings.steps_per_mm[parameter] = value; break;
+      printf("Setting axis %d to %f\n", parameter, value);
+      settings.steps_per_mm[parameter] = value;
+      printf("steps_per_mm:%f\n", settings.steps_per_mm[parameter]);
+      break;
     case 3: 
       if (value < 3) { return(STATUS_SETTING_STEP_PULSE_MIN); }
       settings.pulse_microseconds = round(value); break;
@@ -195,6 +203,7 @@ uint8_t settings_store_global_setting(int parameter, float value) {
       return(STATUS_INVALID_STATEMENT);
   }
   write_global_settings();
+  printf("steps_per_mm:%f\n", settings.steps_per_mm[0]);
   return(STATUS_OK);
 }
 

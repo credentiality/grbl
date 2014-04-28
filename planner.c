@@ -29,6 +29,7 @@
 #include "platform.h"
 #include "settings.h"
 #include "config.h"
+#include "protocol.h"
 
 static block_t block_buffer[BLOCK_BUFFER_SIZE];  // A ring buffer for motion instructions
 static volatile uint8_t block_buffer_head;       // Index of the next block to be pushed

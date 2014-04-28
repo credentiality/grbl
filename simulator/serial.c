@@ -20,17 +20,20 @@
 */
 
 #include "serial.h"
+#include <stdio.h>
 
 void serial_init()
 {
 }
 
 void serial_write(uint8_t data) {
+  printf("%c", data);
 }
 
 
 uint8_t serial_read()
 {
+  return getchar();
 }
 
 void serial_reset_read_buffer() 
