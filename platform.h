@@ -2,8 +2,8 @@
 #define platform_h
 
 //#define ARDUINO
-#define SIMULATOR
-//#define RASPI
+//#define SIMULATOR
+#define RASPI
 
 #ifndef ARDUINO
 #define PSTR(s) ((const char *)(s))

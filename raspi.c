@@ -73,6 +73,7 @@ inline void raspi_direction(int axis, int value) {
   // 0 means GPIO-0 on this diagram: http://elinux.org/File:GPIOs.png
   const int raspi_direction_pins[] = { 0, 0, 0, 0, 0, 0 };
 
+  //printf("set direction[%d]:%d\n", axis, value);
   if (value) {
     GPIO_SET = 1 << raspi_direction_pins[axis];
   } else {
@@ -84,6 +85,7 @@ inline void raspi_step(int axis, int value) {
   // 0 means GPIO-0 on this diagram: http://elinux.org/File:GPIOs.png
   const int raspi_step_pins[] = { 1, 1, 1, 1, 1, 1 };
 
+  //printf("set step[%d]:%d\n", axis, value);
   if (value) {
     GPIO_SET = 1 << raspi_step_pins[axis];
   } else {

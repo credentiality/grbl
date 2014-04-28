@@ -34,12 +34,20 @@
 #include "stepper.h"
 #include "protocol.h"
 
+#include <stdio.h>
+
 // Declare system global variable structure
 system_t sys; 
 
 int main(void)
 {
   eeprom_init("grblrc");
+#ifdef RASPI
+  if (!raspi_init()) {
+    printf("Failed to initialize Raspberry PI GPIO and realtime support.\n");
+    return 1;
+  }
+#endif
 
   // Initialize system
   serial_init(); // Setup serial baud rate and interrupts
