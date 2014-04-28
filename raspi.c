@@ -19,10 +19,6 @@
   * so at least you still have your code changes written to the SD-card! *
  \************************************************************************/
 
-// Use GPIO-0 and GPIO-1 to control the Axis 0 stepper
-#define RASPI_AXIS0_DIRECTION (0)
-#define RASPI_AXIS0_STEP (1)
-
 // defines for using the realtime kernel
 #define MY_PRIORITY (49) /* we use 49 as the PRREMPT_RT use 50
                             as the priority of kernel tasklets
@@ -71,7 +67,7 @@ static void setup_io();
 
 inline void raspi_direction(int axis, int value) {
   // 0 means GPIO-0 on this diagram: http://elinux.org/File:GPIOs.png
-  const int raspi_direction_pins[] = { 0, 0, 0, 0, 0, 0 };
+  const int raspi_direction_pins[] = { 0, 14, 4, 0, 0, 0 };
 
   //printf("set direction[%d]:%d\n", axis, value);
   if (value) {
@@ -83,7 +79,7 @@ inline void raspi_direction(int axis, int value) {
 
 inline void raspi_step(int axis, int value) {
   // 0 means GPIO-0 on this diagram: http://elinux.org/File:GPIOs.png
-  const int raspi_step_pins[] = { 1, 1, 1, 1, 1, 1 };
+  const int raspi_step_pins[] = { 1, 15, 17, 1, 1, 1 };
 
   //printf("set step[%d]:%d\n", axis, value);
   if (value) {
