@@ -3,9 +3,14 @@
 
 //#define ARDUINO
 #define SIMULATOR
+//#define RASPI
 
-#ifdef SIMULATOR
+#ifndef ARDUINO
 #define PSTR(s) ((const char *)(s))
+#endif
+
+#ifdef RASPI
+#include "raspi.h"
 #endif
 
 #include "platform/limits.h"
