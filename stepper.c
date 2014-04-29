@@ -177,8 +177,11 @@ void st_wake_up()
     // Enable stepper driver interrupt
     TIMSK1 |= (1<<OCIE1A);
 #else
-    // Start firing the pulse_begin_handler every pulse_microseconds
-    set_timer(pulse_begin_timer, settings.pulse_microseconds, settings.pulse_microseconds);
+    if (current_block != NULL) {
+      set_step_events_per_minute(current_block->initial_rate);
+    } else {
+      set_step_events_per_minute(MINIMUM_STEPS_PER_MINUTE);
+    } 
 #endif
   }
 }
