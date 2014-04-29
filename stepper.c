@@ -125,7 +125,7 @@ void set_timer(timer_t timerid, long oneshot, long repeat) {
   struct itimerspec interval;
   interval.it_value.tv_sec = 0;
   interval.it_value.tv_nsec = oneshot * 1000;
-  interval.it_interval.tv_sec = (repeat ? 1:0);
+  interval.it_interval.tv_sec = 0;
   interval.it_interval.tv_nsec = repeat * 1000;
 
   if (timer_settime(timerid, 0, &interval, NULL) == -1) {
