@@ -125,7 +125,7 @@ void set_timer(timer_t timerid, long oneshot, long repeat) {
   struct itimerspec interval;
   interval.it_value.tv_sec = 0;
   interval.it_value.tv_nsec = oneshot * 1000;
-  interval.it_interval.tv_sec = (repeat ? 1:0);
+  interval.it_interval.tv_sec = 0;
   interval.it_interval.tv_nsec = repeat * 1000;
 
   if (timer_settime(timerid, 0, &interval, NULL) == -1) {
@@ -254,16 +254,17 @@ void pulse_begin_handler(int unused)
 #else
 
 #ifdef RASPI
+  //printf("out_bits:%hhx\n", out_bits);
   // TODO: I think these create traffic between the raspi SOC and the broadcom
   // chip with the GPIO pins, so it may pay to be more clever about only making
   // calls for things that need to change.
-  raspi_direction(0, out_bits & X_DIRECTION_BIT);
-  raspi_direction(1, out_bits & Y_DIRECTION_BIT);
-  raspi_direction(2, out_bits & Z_DIRECTION_BIT);
+  raspi_direction(0, out_bits & (1 << X_DIRECTION_BIT));
+  raspi_direction(1, out_bits & (1 << Y_DIRECTION_BIT));
+  raspi_direction(2, out_bits & (1 << Z_DIRECTION_BIT));
 
-  raspi_step(0, out_bits & X_STEP_BIT);
-  raspi_step(1, out_bits & Y_STEP_BIT);
-  raspi_step(2, out_bits & Z_STEP_BIT);
+  raspi_step(0, out_bits & (1 << X_STEP_BIT));
+  raspi_step(1, out_bits & (1 << Y_STEP_BIT));
+  raspi_step(2, out_bits & (1 << Z_STEP_BIT));
 #endif
 
   set_timer(pulse_end_timer, settings.pulse_microseconds, 0);
