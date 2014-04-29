@@ -1,6 +1,10 @@
 // TODO: Only eeprom_put_char and eeprom_get_char are arduino-specific.
 // Factor those out and leave the rest common.
 
+// TODO: memcpy_from_eeprom_with_checksum returns true for empty grblrc
+// since checksum(000....) == 0.  So it doesn't properly detect that
+// an empty file needs to cause a settings reset.  Filling grblrc
+// with garbage is a workaround.
 #include <stdio.h>
 #include <stdlib.h>
 

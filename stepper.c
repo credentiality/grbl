@@ -125,7 +125,7 @@ void set_timer(timer_t timerid, long oneshot, long repeat) {
   struct itimerspec interval;
   interval.it_value.tv_sec = 0;
   interval.it_value.tv_nsec = oneshot * 1000;
-  interval.it_interval.tv_sec = 0;
+  interval.it_interval.tv_sec = (repeat ? 1:0);
   interval.it_interval.tv_nsec = repeat * 1000;
 
   if (timer_settime(timerid, 0, &interval, NULL) == -1) {
@@ -238,6 +238,7 @@ void pulse_begin_handler(int unused)
 { 
   if (busy) { return; } // The busy-flag is used to avoid reentering this interrupt
   
+  //fprintf(stderr, "up\n");
 #ifdef ARDUINO
   // Set the direction pins a couple of nanoseconds before we step the steppers
   STEPPING_PORT = (STEPPING_PORT & ~DIRECTION_MASK) | (out_bits & DIRECTION_MASK);
@@ -251,7 +252,7 @@ void pulse_begin_handler(int unused)
   // exactly settings.pulse_microseconds microseconds, independent of the main Timer1 prescaler.
   TCNT2 = step_pulse_time; // Reload timer counter
   TCCR2B = (1<<CS21); // Begin timer2. Full speed, 1/8 prescaler
-#else
+#endif
 
 #ifdef RASPI
   //printf("out_bits:%hhx\n", out_bits);
@@ -265,10 +266,12 @@ void pulse_begin_handler(int unused)
   raspi_step(0, out_bits & (1 << X_STEP_BIT));
   raspi_step(1, out_bits & (1 << Y_STEP_BIT));
   raspi_step(2, out_bits & (1 << Z_STEP_BIT));
+
 #endif
 
+#ifndef ARDUINO
+  //printf("Setting timer %d\n", settings.pulse_microseconds);
   set_timer(pulse_end_timer, settings.pulse_microseconds, 0);
-
 #endif
 
   busy = true;
@@ -441,9 +444,12 @@ ISR(TIMER2_OVF_vect)
 #else
 void pulse_end_handler(int unused)
 {
+  //fprintf(stderr, "down\n");
   int axis;
   for (axis = 0; axis < N_AXIS; axis++) {
+#ifdef RASPI
     raspi_step(axis, 0);
+#endif
   }
 }
 #endif
@@ -552,6 +558,12 @@ static uint32_t config_step_timer(uint32_t cycles)
   TCCR1B = (TCCR1B & ~(0x07<<CS10)) | (prescaler<<CS10);
   // Set ceiling
   OCR1A = ceiling;
+#else
+
+  long period = actual_cycles / TICKS_PER_MICROSECOND; 
+  //printf("Period: %d\n", period);
+  set_timer(pulse_begin_timer, period, period);
+
 #endif
 
   return(actual_cycles);

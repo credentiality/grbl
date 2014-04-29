@@ -65,9 +65,13 @@ volatile unsigned *gpio;
 
 static void setup_io();
 
+// 0 means GPIO-0 on this diagram: http://elinux.org/File:GPIOs.png
+const int raspi_direction_pins[] = { 0, 14, 4, 0, 0, 0 };
+
+// 0 means GPIO-0 on this diagram: http://elinux.org/File:GPIOs.png
+const int raspi_step_pins[] = { 1, 15, 17, 1, 1, 1 };
+
 inline void raspi_direction(int axis, int value) {
-  // 0 means GPIO-0 on this diagram: http://elinux.org/File:GPIOs.png
-  const int raspi_direction_pins[] = { 0, 14, 4, 0, 0, 0 };
 
   //printf("set direction[%d]:%d\n", axis, value);
   if (value) {
@@ -78,9 +82,6 @@ inline void raspi_direction(int axis, int value) {
 }
 
 inline void raspi_step(int axis, int value) {
-  // 0 means GPIO-0 on this diagram: http://elinux.org/File:GPIOs.png
-  const int raspi_step_pins[] = { 1, 15, 17, 1, 1, 1 };
-
   //printf("set step[%d]:%d\n", axis, value);
   if (value) {
     GPIO_SET = 1 << raspi_step_pins[axis];
@@ -114,10 +115,11 @@ int raspi_init()
   // Set up gpi pointer for direct register access
   setup_io();
 
-  INP_GPIO(RASPI_AXIS0_DIRECTION); // must use INP_GPIO before we can use OUT_GPIO
-  OUT_GPIO(RASPI_AXIS0_DIRECTION);
-  INP_GPIO(RASPI_AXIS0_STEP);
-  OUT_GPIO(RASPI_AXIS0_STEP);
+  int axis;
+  for (axis = 0; axis < 3; axis++) {
+    INP_GPIO(raspi_step_pins[axis]); // must use INP_GPIO before we can use OUT_GPIO
+    OUT_GPIO(raspi_step_pins[axis]);
+  }
 
   return 1;
 }
