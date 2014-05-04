@@ -66,14 +66,15 @@ volatile unsigned *gpio;
 static void setup_io();
 
 // 0 means GPIO-0 on this diagram: http://elinux.org/File:GPIOs.png
-const int raspi_direction_pins[] = { 0, 14, 4, 0, 0, 0 };
+const int raspi_direction_pins[] = { 14, 0, 4, 0, 0, 0 };
 
 // 0 means GPIO-0 on this diagram: http://elinux.org/File:GPIOs.png
-const int raspi_step_pins[] = { 1, 15, 17, 1, 1, 1 };
+const int raspi_step_pins[] = { 15, 1, 17, 1, 1, 1 };
 
 inline void raspi_direction(int axis, int value) {
 
-  //printf("set direction[%d]:%d\n", axis, value);
+  //printf("set direction[%d pin %d]:%d\n", axis, raspi_direction_pins[axis],
+  //       value);
   if (value) {
     GPIO_SET = 1 << raspi_direction_pins[axis];
   } else {
@@ -119,6 +120,8 @@ int raspi_init()
   for (axis = 0; axis < 3; axis++) {
     INP_GPIO(raspi_step_pins[axis]); // must use INP_GPIO before we can use OUT_GPIO
     OUT_GPIO(raspi_step_pins[axis]);
+    INP_GPIO(raspi_direction_pins[axis]);
+    OUT_GPIO(raspi_direction_pins[axis]);
   }
 
   return 1;
